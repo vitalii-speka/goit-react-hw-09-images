@@ -1,25 +1,23 @@
-import React, { Component } from "react";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import "./App.css";
-import Searchbar from "./componets/Searchbar";
-import fethPhotosAPI from "./service/photos-api";
-import ImageGallery from "./componets/ImageGallery";
-import Loader from "react-loader-spinner";
-import Button from "./componets/Button";
-import Modal from "./componets/Modal";
+import React, { Component } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './App.css';
+import Searchbar from './componets/Searchbar';
+import fethPhotosAPI from './service/photos-api';
+import ImageGallery from './componets/ImageGallery';
+import Loader from 'react-loader-spinner';
+import Button from './componets/Button';
+import Modal from './componets/Modal';
 
 class App extends Component {
   state = {
     photos: [],
-    searchName: "",
-    // url: "https://pixabay.com/api/",
-    // key: "19138235-266d6c5ac156d39437978a172",
-    error: "",
+    searchName: '',
+    error: '',
     loading: false,
     page: 1,
     showModal: false,
-    currentImgObj: { largeUrl: "", alt: "" },
+    currentImgObj: { largeUrl: '', alt: '' },
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -33,15 +31,15 @@ class App extends Component {
     }
   }
 
-  fetchProcessing = (searchName) => {
+  fetchProcessing = searchName => {
     const { page } = this.state;
 
     fethPhotosAPI(searchName, page)
-      .then((photos) => {
+      .then(photos => {
         if (photos.hits.length === 0) {
-          return toast.error("Sorry, your query was not found... ");
+          return toast.error('Sorry, your query was not found... ');
         }
-        this.setState((prevState) => ({
+        this.setState(prevState => ({
           photos: [...prevState.photos, ...photos.hits],
           page: (prevState.page += 1),
           loading: false,
@@ -55,11 +53,11 @@ class App extends Component {
     if (this.state.page !== 2)
       window.scrollTo({
         top: document.documentElement.scrollTop + 450,
-        behavior: "smooth",
+        behavior: 'smooth',
       });
   };
 
-  handleInputSubmit = (searchName) => {
+  handleInputSubmit = searchName => {
     this.setState({ searchName });
     this.resetPage();
   };
@@ -68,7 +66,7 @@ class App extends Component {
     this.setState({ page: 1 });
   };
 
-  nextPage = (e) => {
+  nextPage = e => {
     e.preventDefault();
 
     this.fetchProcessing(this.state.searchName);
@@ -80,11 +78,11 @@ class App extends Component {
     }));
   };
 
-  handleGalleryItemClick = (e) => {
+  handleGalleryItemClick = e => {
     const largeUrl = e.target.dataset.largeUrl;
     const alt = e.target.alt;
 
-    if (e.target.nodeName === "IMG") {
+    if (e.target.nodeName === 'IMG') {
       this.setState({ currentImgObj: { largeUrl, alt } });
     }
     this.toggleModal();
@@ -100,9 +98,9 @@ class App extends Component {
         {error && (
           <h1
             style={{
-              padding: "10px 20px",
-              textAlign: "center",
-              color: "red",
+              padding: '10px 20px',
+              textAlign: 'center',
+              color: 'red',
             }}
           >
             {error.message}
@@ -121,7 +119,7 @@ class App extends Component {
         ) : null}
 
         {loading && (
-          <Loader type="Puff" color="#000" height={600} width={600} />
+          <Loader type="Puff" color="#000" height={500} width={500} />
         )}
 
         {showModal && (

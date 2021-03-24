@@ -1,9 +1,50 @@
-import React, { Component } from "react";
-import { toast } from "react-toastify";
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 
-import s from "./Searchbar.module.css";
+import s from './Searchbar.module.css';
 
-class Searchbar extends Component {
+export default function Searchbar({ onSubmit }) {
+  const [searchName, setSearchName] = useState();
+
+  const handleNameChange = event => {
+    setSearchName(event.currentTarget.value.toLowerCase());
+    // this.setState({ searchName: event.currentTarget.value.toLowerCase() });
+  };
+
+  const handleSubmit = event => {
+    event.preventDefault();
+
+    if (searchName === ' ') {
+      return toast.info('please, enter your request');
+    }
+    console.log(searchName);
+    onSubmit(searchName);
+    setSearchName('');
+  };
+
+  return (
+    <header onSubmit={handleSubmit} className={s.SearchBar}>
+      <form className={s.SearchForm}>
+        <button type="submit" className={s.SearchFormButton}>
+          <span className={s.SearchFormButtonLabel}>Search</span>
+        </button>
+
+        <input
+          className={s.SearchFormInput}
+          type="text"
+          name="searchName"
+          value={searchName}
+          onChange={handleNameChange}
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+        />
+      </form>
+    </header>
+  );
+}
+
+/*class Searchbar extends Component {
   state = {
     searchName: "",
   };
@@ -46,4 +87,4 @@ class Searchbar extends Component {
   }
 }
 
-export default Searchbar;
+export default Searchbar; */
