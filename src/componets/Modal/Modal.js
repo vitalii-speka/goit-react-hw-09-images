@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import { createPortal } from "react-dom";
-import styles from "./Modal.module.css";
-import Loader from "react-loader-spinner";
+import React, { Component } from 'react';
+import { createPortal } from 'react-dom';
+import styles from './Modal.module.css';
+import Loader from 'react-loader-spinner';
 
-const modalRoot = document.querySelector("#modal-root");
+const modalRoot = document.querySelector('#modal-root');
 
 class Modal extends Component {
   state = {
@@ -11,21 +11,21 @@ class Modal extends Component {
   };
 
   componentDidMount() {
-    window.addEventListener("keydown", this.handleKeyDown);
+    window.addEventListener('keydown', this.handleKeyDown);
   }
 
   componentWillUnmount() {
-    window.removeEventListener("keydown", this.handleKeyDown);
+    window.removeEventListener('keydown', this.handleKeyDown);
   }
 
-  handleKeyDown = (e) => {
-    if (e.code === "Escape") {
+  handleKeyDown = e => {
+    if (e.code === 'Escape') {
       this.props.onClose();
       this.setState({ isImageLoading: true });
     }
   };
 
-  handleBackdropClick = (event) => {
+  handleBackdropClick = event => {
     if (event.currentTarget === event.target) {
       this.props.onClose();
       this.setState({ isImageLoading: true });
@@ -48,7 +48,7 @@ class Modal extends Component {
           {this.props.children}
         </div>
       </div>,
-      modalRoot
+      modalRoot,
     );
   }
 }
