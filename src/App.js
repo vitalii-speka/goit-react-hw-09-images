@@ -1,13 +1,113 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 import Searchbar from './componets/Searchbar';
 import fethPhotosAPI from './service/photos-api';
-import ImageGallery from './componets/ImageGallery';
+// import ImageGallery from './componets/ImageGallery';
 import Loader from 'react-loader-spinner';
 import Button from './componets/Button';
-import Modal from './componets/Modal';
+// import Modal from './componets/Modal';
+
+export default function App() {
+  const [photos, setPhotos] = useState([]);
+  const [searchName, setSearchName] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  // const [showModal, setShowModal] = useState(false);
+  // const [currentImgObjUrl, setCurrentImgObjUrl] = useState('');
+  // const [currentImgObjAlt, setCurrentImgObjAlt] = useState('');
+
+  const fetchProcessing = searchName => {
+    fethPhotosAPI(searchName, page)
+      .then(photos => {
+        if (photos.hits.length === 0) {
+          toast.error('Sorry, your query was not found... ');
+          return;
+        }
+
+        setPhotos(prePhotos => [...prePhotos.photos, ...photos.hits]);
+        setPage(prePage => (prePage.page += 1));
+        setLoading(false);
+
+        scrollToBottom();
+      })
+      .catch(error => setError(error.message));
+  };
+
+  const scrollToBottom = () => {
+    if (page !== 2)
+      window.scrollTo({
+        top: document.documentElement.scrollTop + 450,
+        behavior: 'smooth',
+      });
+  };
+
+  const nextPage = e => {
+    e.preventDefault();
+
+    fetchProcessing(searchName);
+  };
+
+  const handleInputSubmit = searchName => {
+    setSearchName(searchName);
+    // this.resetPage();
+  };
+
+  return (
+    <>
+      <Searchbar onSubmit={handleInputSubmit} />
+
+      {error && (
+        <h1
+          style={{
+            padding: '10px 20px',
+            textAlign: 'center',
+            color: 'red',
+          }}
+        >
+          {error.message}
+        </h1>
+      )}
+
+      {/* {photos.length > 0 && (
+        <ImageGallery
+          photos={photos}
+          onClick={this.handleGalleryItemClick}
+        ></ImageGallery>
+      )} */}
+
+      {photos.length >= 11 ? (
+        <Button aria-label="Load more" onClick={nextPage}></Button>
+      ) : null}
+
+      {loading && <Loader type="Puff" color="#000" height={500} width={500} />}
+
+      {/* {showModal && (
+        <Modal
+          src={currentImgObjUrl}
+          alt={currentImgObjAlt}
+          onClose={this.toggleModal}
+        ></Modal>
+      )} */}
+
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+    </>
+  );
+}
+
+/*  
 
 class App extends Component {
   state = {
@@ -147,3 +247,4 @@ class App extends Component {
 }
 
 export default App;
+*/
