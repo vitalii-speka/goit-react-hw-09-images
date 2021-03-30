@@ -38,6 +38,7 @@ export default function App() {
           }
 
           setPhotos(prePhotos => [...prePhotos, ...photos.hits]);
+          // setPage(prePage => prePage + 1);
           setLoading(false);
 
           scrollToBottom();
@@ -51,7 +52,7 @@ export default function App() {
 
   useEffect(() => {
     setPhotos([]);
-    setPage(1);
+    // setPage(1);
 
     if (searchName === '') {
       return;
@@ -59,10 +60,11 @@ export default function App() {
 
     setLoading(true);
     fetchProcessing(searchName);
-  }, [fetchProcessing, searchName, page]);
+  }, [fetchProcessing, searchName]);
 
   const nextPage = e => {
     e.preventDefault();
+    fetchProcessing(searchName);
     setPage(page + 1);
   };
 
