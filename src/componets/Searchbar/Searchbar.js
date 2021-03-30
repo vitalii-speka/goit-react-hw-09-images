@@ -7,17 +7,14 @@ export default function Searchbar({ onSubmit }) {
   const [searchName, setSearchName] = useState();
 
   const handleNameChange = event => {
-    setSearchName(event.currentTarget.value.toLowerCase());
-    // this.setState({ searchName: event.currentTarget.value.toLowerCase() });
+    setSearchName(event.currentTarget.value.toLowerCase().trim());
   };
 
   const handleSubmit = event => {
     event.preventDefault();
-
-    if (searchName === ' ') {
+    if (searchName === '') {
       return toast.info('please, enter your request');
     }
-    console.log(searchName);
     onSubmit(searchName);
     setSearchName('');
   };

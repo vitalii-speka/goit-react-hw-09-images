@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
@@ -19,48 +19,75 @@ export default function App() {
   const [currentImgObjUrl, setCurrentImgObjUrl] = useState('');
   const [currentImgObjAlt, setCurrentImgObjAlt] = useState('');
 
-  const fetchProcessing = searchName => {
-    fethPhotosAPI(searchName, page)
-      .then(photos => {
-        console.log(photos);
-        if (photos.hits.length === 0) {
-          toast.error('Sorry, your query was not found... ');
-          return;
-        }
-
-        setPhotos(prePhotos => [...prePhotos.photos, ...photos.hits]);
-        setPage(prePage => (prePage.page += 1));
-        setLoading(false);
-
-        scrollToBottom();
-      })
-      .catch(error => setError(error.message));
-  };
-
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     if (page !== 2)
       window.scrollTo({
         top: document.documentElement.scrollTop + 450,
         behavior: 'smooth',
       });
-  };
+  }, [page]);
+
+  const fetchProcessing = useCallback(
+    searchName => {
+      fethPhotosAPI(searchName, page)
+        .then(photos => {
+          if (photos.hits.length === 0) {
+            toast.error('Sorry, your query was not found... ');
+            setLoading(false);
+            return;
+          }
+
+          if (searchName === '') {
+            console.log('?????');
+          }
+
+          setPhotos(prePhotos => [...prePhotos, ...photos.hits]);
+          setLoading(false);
+
+          scrollToBottom();
+        })
+        .catch(() => {
+          setError(error.message);
+        });
+    },
+    [page, scrollToBottom],
+  );
+
+  useEffect(() => {
+    setPhotos([]);
+    setPage(1);
+    if (searchName === '') {
+      return;
+    }
+
+    setLoading(true);
+    fetchProcessing(searchName);
+
+    // if (prevSearchName !== searchName) {
+    //   // this.setState({ loading: true, photos: [], page: 1 });
+
+    //   fetchProcessing(searchName);
+    // }
+  }, [fetchProcessing, searchName, page]);
 
   const nextPage = e => {
     e.preventDefault();
-
-    fetchProcessing(searchName);
+    setPage(page + 1);
   };
 
   const handleInputSubmit = searchName => {
+    if (searchName === '') {
+      return;
+    }
     setSearchName(searchName);
-    // this.resetPage();
+    setPage(1);
   };
 
   const toggleModal = () => {
     // this.setState(({ showModal }) => ({
     //   showModal: !showModal,
     // }));
-    setShowModal(!showModal);
+    setShowModal(prevShowModal => !prevShowModal);
   };
 
   const handleGalleryItemClick = e => {
@@ -109,7 +136,7 @@ export default function App() {
         <Modal
           src={currentImgObjUrl}
           alt={currentImgObjAlt}
-          onClose={this.toggleModal}
+          onClose={toggleModal}
         ></Modal>
       )}
 
