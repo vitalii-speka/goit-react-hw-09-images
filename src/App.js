@@ -37,10 +37,6 @@ export default function App() {
             return;
           }
 
-          if (searchName === '') {
-            console.log('?????');
-          }
-
           setPhotos(prePhotos => [...prePhotos, ...photos.hits]);
           setLoading(false);
 
@@ -50,24 +46,19 @@ export default function App() {
           setError(error.message);
         });
     },
-    [page, scrollToBottom],
+    [page, scrollToBottom, error.message],
   );
 
   useEffect(() => {
     setPhotos([]);
     setPage(1);
+
     if (searchName === '') {
       return;
     }
 
     setLoading(true);
     fetchProcessing(searchName);
-
-    // if (prevSearchName !== searchName) {
-    //   // this.setState({ loading: true, photos: [], page: 1 });
-
-    //   fetchProcessing(searchName);
-    // }
   }, [fetchProcessing, searchName, page]);
 
   const nextPage = e => {
@@ -84,9 +75,6 @@ export default function App() {
   };
 
   const toggleModal = () => {
-    // this.setState(({ showModal }) => ({
-    //   showModal: !showModal,
-    // }));
     setShowModal(prevShowModal => !prevShowModal);
   };
 
@@ -97,8 +85,6 @@ export default function App() {
     if (e.target.nodeName === 'IMG') {
       setCurrentImgObjUrl(largeUrl);
       setCurrentImgObjAlt(alt);
-
-      // this.setState({ currentImgObj: { largeUrl, alt } });
     }
     toggleModal();
   };
@@ -155,7 +141,7 @@ export default function App() {
   );
 }
 
-/*  
+/* before 
 
 class App extends Component {
   state = {

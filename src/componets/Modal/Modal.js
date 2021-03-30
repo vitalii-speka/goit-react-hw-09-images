@@ -5,12 +5,7 @@ import Loader from 'react-loader-spinner';
 
 const modalRoot = document.querySelector('#modal-root');
 
-export default function Modal({
-  onClose,
-  children,
-  currentImgObjUrl,
-  currentImgObjAlt,
-}) {
+export default function Modal({ onClose, src, alt }) {
   const [isImageLoading, setIsImageLoading] = useState(true);
 
   useEffect(() => {
@@ -22,6 +17,7 @@ export default function Modal({
     };
 
     window.addEventListener('keydown', handleKeyDown);
+
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
@@ -44,12 +40,7 @@ export default function Modal({
         {isImageLoading && (
           <Loader type="Watch" color="#fff" height={500} width={500} />
         )}
-        <img
-          src={currentImgObjUrl}
-          alt={currentImgObjAlt}
-          onLoad={onImageLoad}
-        />
-        {children}
+        <img src={src} alt={alt} onLoad={onImageLoad} />
       </div>
     </div>,
     modalRoot,

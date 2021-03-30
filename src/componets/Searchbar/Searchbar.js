@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import s from './Searchbar.module.css';
 
 export default function Searchbar({ onSubmit }) {
-  const [searchName, setSearchName] = useState();
+  const [searchName, setSearchName] = useState('');
 
   const handleNameChange = event => {
     setSearchName(event.currentTarget.value.toLowerCase().trim());
