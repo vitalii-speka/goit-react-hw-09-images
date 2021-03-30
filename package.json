@@ -2,6 +2,7 @@
   "name": "goit-react-hw-09-images",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://vitalii-speka.github.io/goit-react-hw-09-image",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.3",
